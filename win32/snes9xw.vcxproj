@@ -142,7 +142,6 @@
     <Link>
       <AdditionalDependencies>comctl32.lib;winmm.lib;opengl32.lib;glu32.lib;wsock32.lib;dsound.lib;dxguid.lib;delayimp.lib;vfw32.lib;msxml2.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <EnableUAC>false</EnableUAC>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(IntDir)$(ProjectName).pdb</ProgramDatabaseFile>
       <GenerateMapFile>false</GenerateMapFile>
@@ -155,6 +154,7 @@
     </Link>
     <Manifest>
       <EnableDpiAwareness>true</EnableDpiAwareness>
+      <UACExecutionLevel>requireAdministrator</UACExecutionLevel>
     </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Unicode|x64'">
@@ -193,7 +193,6 @@
     <Link>
       <AdditionalDependencies>comctl32.lib;winmm.lib;opengl32.lib;glu32.lib;wsock32.lib;dsound.lib;dxguid.lib;delayimp.lib;vfw32.lib;msxml2.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <EnableUAC>false</EnableUAC>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(IntDir)$(ProjectName).pdb</ProgramDatabaseFile>
       <GenerateMapFile>false</GenerateMapFile>
@@ -206,6 +205,7 @@
     </Link>
     <Manifest>
       <EnableDpiAwareness>true</EnableDpiAwareness>
+      <UACExecutionLevel>requireAdministrator</UACExecutionLevel>
     </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Unicode|Win32'">
@@ -261,6 +261,7 @@
     </Link>
     <Manifest>
       <EnableDpiAwareness>true</EnableDpiAwareness>
+      <UACExecutionLevel>requireAdministrator</UACExecutionLevel>
     </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Unicode|x64'">
@@ -321,6 +322,7 @@
     </Link>
     <Manifest>
       <EnableDpiAwareness>true</EnableDpiAwareness>
+      <UACExecutionLevel>requireAdministrator</UACExecutionLevel>
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
