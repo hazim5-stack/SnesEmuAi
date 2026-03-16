@@ -95,31 +95,66 @@ void S9xExit( void)
 #define IS_SLASH(x) ((x) == TEXT('\\') || (x) == TEXT('/'))
 static TCHAR startDirectory [PATH_MAX];
 static bool startDirectoryValid = false;
+static TCHAR appDataDirectory [PATH_MAX];
+static bool  appDataDirectoryValid = false;
+
+static void EnsureStartDirectory()
+{
+    if (!startDirectoryValid) {
+        GetModuleFileName(NULL, startDirectory, PATH_MAX);
+        for (int i = lstrlen(startDirectory); i >= 0; i--) {
+            if (IS_SLASH(startDirectory[i])) {
+                startDirectory[i] = TEXT('\0');
+                break;
+            }
+        }
+        startDirectoryValid = true;
+    }
+}
+
+static void EnsureAppDataDirectory()
+{
+    if (!appDataDirectoryValid) {
+        TCHAR appData[PATH_MAX]{};
+        GetEnvironmentVariable(TEXT("APPDATA"), appData, PATH_MAX);
+        _sntprintf(appDataDirectory, PATH_MAX, TEXT("%s\\SnesEmuAi"), appData);
+        appDataDirectory[PATH_MAX - 1] = TEXT('\0');
+        CreateDirectory(appDataDirectory, NULL);
+        appDataDirectoryValid = true;
+    }
+}
 
 const TCHAR *S9xGetDirectoryT (enum s9x_getdirtype dirtype)
 {
     static TCHAR filename[PATH_MAX];
-	if(!startDirectoryValid)
-	{
-		// directory of the executable's location:
-		GetModuleFileName(NULL, startDirectory, PATH_MAX);
-        for(int i=lstrlen(startDirectory); i>=0; i--){
-            if(IS_SLASH(startDirectory[i])){
-                startDirectory[i]=TEXT('\0');
-                break;
-            }
-        }
+    EnsureStartDirectory();
+    EnsureAppDataDirectory();
 
-		startDirectoryValid = true;
-	}
-
-	const TCHAR* rv = startDirectory;
+	const TCHAR* rv = appDataDirectory; // DEFAULT_DIR / HOME_DIR → AppData
 
     switch(dirtype){
 	  default:
       case DEFAULT_DIR:
 	  case HOME_DIR:
 		  break;
+
+	  case LOG_DIR: {
+		  static TCHAR logDir[PATH_MAX];
+		  static bool logDirInit = false;
+		  if (!logDirInit) {
+			  TCHAR localApp[PATH_MAX]{};
+			  GetEnvironmentVariable(TEXT("LOCALAPPDATA"), localApp, PATH_MAX);
+			  TCHAR parent[PATH_MAX]{};
+			  _sntprintf(parent, PATH_MAX, TEXT("%s\\SnesEmuAi"), localApp);
+			  parent[PATH_MAX - 1] = TEXT('\0');
+			  CreateDirectory(parent, NULL);
+			  _sntprintf(logDir, PATH_MAX, TEXT("%s\\Logs"), parent);
+			  logDir[PATH_MAX - 1] = TEXT('\0');
+			  CreateDirectory(logDir, NULL);
+			  logDirInit = true;
+		  }
+		  rv = logDir;
+	  } break;
 
 	  case SCREENSHOT_DIR:
 		  rv = GUI.ScreensDir;
@@ -174,7 +209,7 @@ const TCHAR *S9xGetDirectoryT (enum s9x_getdirtype dirtype)
 
     if (PathIsRelative(rv)) {
         TCHAR temp_container[PATH_MAX];
-        _sntprintf(temp_container, PATH_MAX, TEXT("%s\\%s"), startDirectory, rv);
+        _sntprintf(temp_container, PATH_MAX, TEXT("%s\\%s"), appDataDirectory, rv);
         GetFullPathName(temp_container, PATH_MAX, filename, NULL);
         rv = filename;
     }
@@ -258,8 +293,14 @@ void S9xMessage (int type, int, const char *str)
 #ifdef DEBUGGER
     static FILE *out = NULL;
 
-    if (out == NULL)
-        out = fopen ("out.txt", "w");
+    if (out == NULL) {
+        char localApp[MAX_PATH]{};
+        GetEnvironmentVariableA("LOCALAPPDATA", localApp, MAX_PATH);
+        char path[MAX_PATH]{};
+        _snprintf(path, MAX_PATH, "%s\\SnesEmuAi\\Logs\\out.txt", localApp);
+        path[MAX_PATH - 1] = '\0';
+        out = fopen (path, "w");
+    }
 
     fprintf (out, "%s\n", str);
 #endif

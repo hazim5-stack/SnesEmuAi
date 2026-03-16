@@ -9,6 +9,7 @@
 #include <ctime>
 #include "../snes9x.h"
 #include "../ppu.h"
+#include "SnesEmuAiPaths.h"
 
 /**
  * SNES Emu Ai - Smart Auto-Save (2026)
@@ -165,7 +166,8 @@ private:
     }
 
     void WriteLog() const {
-        std::ofstream log("autosave.log", std::ios::app);
+        std::string path = SnesEmuAiPaths::LogsDirA() + "\\autosave.log";
+        std::ofstream log(path, std::ios::app);
         if (!log) return;
         std::time_t now = std::time(nullptr);
         char tbuf[32];

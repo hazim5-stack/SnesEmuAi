@@ -654,6 +654,58 @@ void WinPostSave(ConfigFile& conf)
 	GUI.customRomDlgSettings.window_size.right += GUI.customRomDlgSettings.window_size.left;
 	GUI.customRomDlgSettings.window_size.bottom += GUI.customRomDlgSettings.window_size.top;
 }
+
+// ── Per-user directory defaults (computed once via env vars) ─────────
+static char defRomsDir[MAX_PATH];
+static char defScreensDir[MAX_PATH];
+static char defMoviesDir[MAX_PATH];
+static char defSPCDir[MAX_PATH];
+static char defSavesDir[MAX_PATH];
+static char defCheatsDir[MAX_PATH];
+static char defPatchesDir[MAX_PATH];
+static char defBiosDir[MAX_PATH];
+static char defSatDir[MAX_PATH];
+static bool defPathsInit = false;
+
+static void InitDefaultPaths()
+{
+    if (defPathsInit) return;
+
+    char roaming[MAX_PATH]{};
+    char local[MAX_PATH]{};
+    char docs[MAX_PATH]{};
+    GetEnvironmentVariableA("APPDATA", roaming, MAX_PATH);
+    GetEnvironmentVariableA("LOCALAPPDATA", local, MAX_PATH);
+    {
+        char profile[MAX_PATH]{};
+        GetEnvironmentVariableA("USERPROFILE", profile, MAX_PATH);
+        _snprintf(docs, MAX_PATH, "%s\\Documents", profile);
+        docs[MAX_PATH - 1] = '\0';
+    }
+
+    auto makePath = [](char* out, const char* base, const char* sub) {
+        _snprintf(out, MAX_PATH, "%s\\SnesEmuAi\\%s", base, sub);
+        out[MAX_PATH - 1] = '\0';
+        char parent[MAX_PATH]{};
+        _snprintf(parent, MAX_PATH, "%s\\SnesEmuAi", base);
+        parent[MAX_PATH - 1] = '\0';
+        CreateDirectoryA(parent, NULL);
+        CreateDirectoryA(out, NULL);
+    };
+
+    makePath(defRomsDir,     docs,    "Roms");
+    makePath(defScreensDir,  local,   "Screenshots");
+    makePath(defMoviesDir,   local,   "Movies");
+    makePath(defSPCDir,      local,   "SPCs");
+    makePath(defSavesDir,    local,   "Saves");
+    makePath(defCheatsDir,   roaming, "Cheats");
+    makePath(defPatchesDir,  roaming, "Patches");
+    makePath(defBiosDir,     roaming, "BIOS");
+    makePath(defSatDir,      local,   "SatData");
+
+    defPathsInit = true;
+}
+
 void WinPostLoad(ConfigFile& conf)
 {
 	int i;
@@ -709,6 +761,24 @@ void WinPostLoad(ConfigFile& conf)
 	ConfigFile::SetAlphaSort(configSort==2);
 	ConfigFile::SetTimeSort(configSort==1);
 
+	// ── Migrate old exe-relative defaults to per-user paths ────────
+	InitDefaultPaths();
+	auto migrateDir = [](TCHAR* field, const char* oldRel, const char* newAbs) {
+		std::string cur = _tToChar(field);
+		if (cur == oldRel || cur.empty())
+			lstrcpyn(field, _tFromChar(newAbs), _MAX_PATH);
+	};
+	migrateDir(GUI.RomDir,        ".\\Roms",        defRomsDir);
+	migrateDir(GUI.ScreensDir,    ".\\Screenshots",  defScreensDir);
+	migrateDir(GUI.MovieDir,      ".\\Movies",      defMoviesDir);
+	migrateDir(GUI.SPCDir,        ".\\SPCs",        defSPCDir);
+	migrateDir(GUI.FreezeFileDir, ".\\Saves",       defSavesDir);
+	migrateDir(GUI.SRAMFileDir,   ".\\Saves",       defSavesDir);
+	migrateDir(GUI.CheatDir,      ".\\Cheats",      defCheatsDir);
+	migrateDir(GUI.PatchDir,      ".\\Patches",     defPatchesDir);
+	migrateDir(GUI.BiosDir,       ".\\BIOS",        defBiosDir);
+	migrateDir(GUI.SatDir,        ".\\SatData",     defSatDir);
+
 	WinPostSave(conf);
 }
 
@@ -737,6 +807,7 @@ void WinPreLoad(ConfigFile& conf)
 // (but don't actually save or load anything yet)
 void WinRegisterConfigItems()
 {
+    InitDefaultPaths();
 #define CATEGORY "Config"
 	AddBool2C("NiceAlignment", niceAlignment, true, "on to line up the =, :, and # in each section of this config file");
 	AddBool2C("Comments", showComments, true, "on to keep comments such as this in this config file. To update/refresh all comments, set this to false and run SNES Emu Ai, then set it to true and run SNES Emu Ai again.");
@@ -826,16 +897,16 @@ void WinRegisterConfigItems()
 	AddUIntC("MaxRecentGames", GUI.MaxRecentGames, 14, "max recent games to show in the recent games menu (must be <= 32)");
 #undef CATEGORY
 #define CATEGORY "Settings\\Win\\Files"
-	AddStringC("Dir:Roms", GUI.RomDir, _MAX_PATH, ".\\Roms", "directory where the Open ROM dialog will start");
-	AddStringC("Dir:Screenshots", GUI.ScreensDir, _MAX_PATH, ".\\Screenshots", "directory where screenshots will be saved");
-	AddStringC("Dir:Movies", GUI.MovieDir, _MAX_PATH, ".\\Movies", "the default directory for recorded movie (.smv) files");
-	AddStringC("Dir:SPCs", GUI.SPCDir, _MAX_PATH, ".\\SPCs", "directory where SPCs will be saved");
-	AddStringC("Dir:Savestates", GUI.FreezeFileDir, _MAX_PATH, ".\\Saves", "directory where savestates will be created and loaded from");
-	AddStringC("Dir:SRAM", GUI.SRAMFileDir, _MAX_PATH, ".\\Saves", "directory where battery saves will be created and loaded from");
-	AddStringC("Dir:Cheats", GUI.CheatDir, _MAX_PATH, ".\\Cheats", "directory in which cheats (.cht files) will be looked for");
-	AddStringC("Dir:Patches", GUI.PatchDir, _MAX_PATH, ".\\Patches", "directory in which ROM patches (.ips/.bps/.ups files) will be looked for");
-	AddStringC("Dir:Bios", GUI.BiosDir, _MAX_PATH, ".\\BIOS", "directory where BIOS files (such as \"BS-X.bios\") will be located");
-	AddStringC("Dir:SatData", GUI.SatDir, _MAX_PATH, ".\\SatData", "directory where Satellaview Signal Data files will be located");
+	AddStringC("Dir:Roms", GUI.RomDir, _MAX_PATH, defRomsDir, "directory where the Open ROM dialog will start");
+	AddStringC("Dir:Screenshots", GUI.ScreensDir, _MAX_PATH, defScreensDir, "directory where screenshots will be saved");
+	AddStringC("Dir:Movies", GUI.MovieDir, _MAX_PATH, defMoviesDir, "the default directory for recorded movie (.smv) files");
+	AddStringC("Dir:SPCs", GUI.SPCDir, _MAX_PATH, defSPCDir, "directory where SPCs will be saved");
+	AddStringC("Dir:Savestates", GUI.FreezeFileDir, _MAX_PATH, defSavesDir, "directory where savestates will be created and loaded from");
+	AddStringC("Dir:SRAM", GUI.SRAMFileDir, _MAX_PATH, defSavesDir, "directory where battery saves will be created and loaded from");
+	AddStringC("Dir:Cheats", GUI.CheatDir, _MAX_PATH, defCheatsDir, "directory in which cheats (.cht files) will be looked for");
+	AddStringC("Dir:Patches", GUI.PatchDir, _MAX_PATH, defPatchesDir, "directory in which ROM patches (.ips/.bps/.ups files) will be looked for");
+	AddStringC("Dir:Bios", GUI.BiosDir, _MAX_PATH, defBiosDir, "directory where BIOS files (such as \"BS-X.bios\") will be located");
+	AddStringC("Dir:SatData", GUI.SatDir, _MAX_PATH, defSatDir, "directory where Satellaview Signal Data files will be located");
 	AddBoolC("Dir:Lock", GUI.LockDirectories, false, "true to prevent SNES Emu Ai from changing configured directories when you browse to a new location");
 	#define ADD(n) AddString("Rom:RecentGame" #n, GUI.RecentGames[n-1], MAX_PATH, "")
 		ADD(1);  ADD(2);  ADD(3);  ADD(4);  ADD(5);  ADD(6);  ADD(7);  ADD(8);

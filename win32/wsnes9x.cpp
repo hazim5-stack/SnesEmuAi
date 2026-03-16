@@ -60,6 +60,7 @@
 #include "SnesEmuAiAchievements.h"
 #include "SnesEmuAiAutoSave.h"
 #include "SnesEmuAiCheatCoder.h"
+#include "SnesEmuAiPaths.h"
 #include "InputCustom.h"
 #include <vector>
 #include <string>
@@ -96,6 +97,8 @@
 #pragma comment(lib, "winhttp.lib")
 #pragma comment(lib, "crypt32.lib")
 #pragma comment(lib, "comctl32.lib")
+
+static std::string GetCheatIndexApiKey();
 
 extern SNPServer NPServer;
 
@@ -3724,7 +3727,7 @@ void S9xExtraUsage ()
 	S9xMessage(S9X_INFO, S9X_USAGE, "-restore                        Reset all settings to default");
 	S9xMessage(S9X_INFO, S9X_USAGE, "-removeregistrykeys             Remove registry keys");
 	S9xMessage(S9X_INFO, S9X_USAGE, "-cartb <filename>               Specify the second cart for multicart, also triggers multicart");
-	MessageBox(NULL, _T("SNES Emu Ai command line options have been written to stdout.txt in the same folder as the executable"), _T("Command line options"), MB_OK | MB_ICONINFORMATION);
+	MessageBox(NULL, _T("SNES Emu Ai command line options have been written to the Logs folder in your AppData"), _T("Command line options"), MB_OK | MB_ICONINFORMATION);
 }
 
 // handles joystick hotkey presses
@@ -4236,11 +4239,16 @@ int WINAPI WinMain(
 
 	SetCurrentDirectory(S9xGetDirectoryT(DEFAULT_DIR));
 
-	// Redirect stderr and stdout to file. It wouldn't go to any commandline anyway.
-	FILE* fout = freopen("stdout.txt", "w", stdout);
-	if(fout) setvbuf(fout, NULL, _IONBF, 0);
-	FILE* ferr = freopen("stderr.txt", "w", stderr);
-	if(ferr) setvbuf(ferr, NULL, _IONBF, 0);
+	// Redirect stderr and stdout to per-user Logs directory
+	{
+		std::string logsDir = SnesEmuAiPaths::LogsDirA();
+		std::string outPath = logsDir + "\\stdout.txt";
+		std::string errPath = logsDir + "\\stderr.txt";
+		FILE* fout = freopen(outPath.c_str(), "w", stdout);
+		if(fout) setvbuf(fout, NULL, _IONBF, 0);
+		FILE* ferr = freopen(errPath.c_str(), "w", stderr);
+		if(ferr) setvbuf(ferr, NULL, _IONBF, 0);
+	}
 
 	DWORD wSoundTimerRes;
 

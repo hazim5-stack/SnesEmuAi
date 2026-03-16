@@ -6,6 +6,7 @@
 
 #include "CShaderPresetDlg.h"
 #include "wsnes9x.h"
+#include "SnesEmuAiPaths.h"
 #include "rsrc/resource.h"
 #include <shellapi.h>
 #include <shlwapi.h>
@@ -80,6 +81,11 @@ CShaderPresetDlg::~CShaderPresetDlg()
 
 std::wstring CShaderPresetDlg::getShaderPackDir()
 {
+    // Prefer user-writable AppData shaders; fall back to install dir
+    std::wstring userDir = SnesEmuAiPaths::ShadersDir() + L"\\glsl-shaders";
+    if (GetFileAttributesW(userDir.c_str()) != INVALID_FILE_ATTRIBUTES)
+        return userDir;
+
     TCHAR exePath[MAX_PATH];
     GetModuleFileName(NULL, exePath, MAX_PATH);
     PathRemoveFileSpec(exePath);
@@ -309,12 +315,7 @@ void CShaderPresetDlg::onApply(HWND hDlg)
 
 void CShaderPresetDlg::onDownloadShaders(HWND hDlg)
 {
-    TCHAR exePath[MAX_PATH];
-    GetModuleFileName(NULL, exePath, MAX_PATH);
-    PathRemoveFileSpec(exePath);
-    std::wstring shadersDir = std::wstring(exePath) + L"\\shaders";
-
-    // Create shaders directory if it doesn't exist
+    std::wstring shadersDir = SnesEmuAiPaths::ShadersDir();
     CreateDirectory(shadersDir.c_str(), NULL);
 
     std::wstring targetDir = shadersDir + L"\\glsl-shaders";
@@ -421,10 +422,7 @@ void CShaderPresetDlg::onOpenShaderFolder(HWND hDlg)
 
     // If shader pack dir doesn't exist, open parent shaders dir or create it
     if (GetFileAttributes(shaderDir.c_str()) == INVALID_FILE_ATTRIBUTES) {
-        TCHAR exePath[MAX_PATH];
-        GetModuleFileName(NULL, exePath, MAX_PATH);
-        PathRemoveFileSpec(exePath);
-        shaderDir = std::wstring(exePath) + L"\\shaders";
+        shaderDir = SnesEmuAiPaths::ShadersDir();
         CreateDirectory(shaderDir.c_str(), NULL);
     }
 
