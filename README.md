@@ -16,13 +16,18 @@ SNES Emu Ai is a portable, freeware Super Nintendo Entertainment System (SNES) e
 |---------|-------------|
 | **Game Recognizer** | Automatically identifies loaded ROMs via cloud API — displays game title, region, year and genre in the title bar. |
 | **Cheat Cloud** | Fetches community cheat codes by CRC32 from an online cheat-index service. One-click apply. |
-| **Cheat Coder** | Chat-style dialog with GPT-powered normalization. Accepts Game Genie, Pro Action Replay, raw and conditional formats. |
+| **Cheat Coder** | Chat-style dialog with GPT-powered normalization. Accepts Game Genie, Pro Action Replay, raw and conditional formats. Streams responses via SSE. |
 | **Achievements Engine** | Per-frame WRAM monitoring with condition-based triggers (EQ, GE, LE, INC, DEC). Persists to `snes9x_achievements.dat`. |
 | **Auto-Save System** | Configurable interval (1–60 min). Rotates between slots 98/99 so manual saves are never overwritten. |
 | **Performance HUD** | Real-time FPS and CPU speed overlay with built-in bitmap font. |
 | **Library Engine** | Scans directories for SNES ROMs, tracks recent games, caches box art paths. |
-| **Modern Shell** | Windows 11 Fluent design — rounded corners, immersive dark mode, DWM visual effects. |
+| **Library UI** | Sidebar navigation with a games grid — boxart cards with click-to-load. |
+| **BoxArt Scraper** | Automatically fetches game cover art from Libretro thumbnail repositories. |
+| **Shader Preset Browser** | Tree-view dialog to browse, preview and apply shader presets — CRT, scanline, NTSC, VHS, handheld filters and 40+ categories with descriptions. |
+| **Modern Shell** | Windows 11 Fluent design — rounded corners, immersive dark mode, Mica/Acrylic via DWM. |
 | **Legacy Bridge** | Maps modern frontend commands to the classic Win32 emulator core via dedicated window messages. |
+| **API Key Manager** | DPAPI-encrypted local storage for API keys with environment variable fallback. |
+| **New UI** | Full React + Vite web frontend — game library grid, AI cheat assistant, save state browser, settings hub. Designed for WebView2 integration. |
 
 ## Requirements
 
