@@ -27,7 +27,6 @@ SNES Emu Ai is a portable, freeware Super Nintendo Entertainment System (SNES) e
 | **Modern Shell** | Windows 11 Fluent design — rounded corners, immersive dark mode, Mica/Acrylic via DWM. |
 | **Legacy Bridge** | Maps modern frontend commands to the classic Win32 emulator core via dedicated window messages. |
 | **API Key Manager** | DPAPI-encrypted local storage for API keys with environment variable fallback. |
-| **New UI** | Full React + Vite web frontend — game library grid, AI cheat assistant, save state browser, settings hub. Designed for WebView2 integration. |
 
 ## Requirements
 
