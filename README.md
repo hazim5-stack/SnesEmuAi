@@ -20,9 +20,6 @@ SNES Emu Ai is a portable, freeware Super Nintendo Entertainment System (SNES) e
 | **Achievements Engine** | Per-frame WRAM monitoring with condition-based triggers (EQ, GE, LE, INC, DEC). Persists to `snes9x_achievements.dat`. |
 | **Auto-Save System** | Configurable interval (1–60 min). Rotates between slots 98/99 so manual saves are never overwritten. |
 | **Performance HUD** | Real-time FPS and CPU speed overlay with built-in bitmap font. |
-| **Library Engine** | Scans directories for SNES ROMs, tracks recent games, caches box art paths. |
-| **Library UI** | Sidebar navigation with a games grid — boxart cards with click-to-load. |
-| **BoxArt Scraper** | Automatically fetches game cover art from Libretro thumbnail repositories. |
 | **Shader Preset Browser** | Tree-view dialog to browse, preview and apply shader presets — CRT, scanline, NTSC, VHS, handheld filters and 40+ categories with descriptions. |
 | **Modern Shell** | Windows 11 Fluent design — rounded corners, immersive dark mode, Mica/Acrylic via DWM. |
 | **Legacy Bridge** | Maps modern frontend commands to the classic Win32 emulator core via dedicated window messages. |
