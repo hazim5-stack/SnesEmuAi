@@ -129,7 +129,20 @@ private:
     SnesEmuAiAchievements() {}
     std::vector<Achievement>   m_list;
     std::vector<Notification>  m_notifications;
-    static constexpr char SAVE_FILE[] = ".\\SnesEmuAi_achievements.dat";
+    static const char* GetSaveFilePath() {
+        static char path[MAX_PATH] = {0};
+        if (!path[0]) {
+            char local[MAX_PATH]{};
+            GetEnvironmentVariableA("LOCALAPPDATA", local, MAX_PATH);
+            char parent[MAX_PATH]{};
+            _snprintf(parent, MAX_PATH, "%s\\SnesEmuAi", local);
+            parent[MAX_PATH - 1] = '\0';
+            CreateDirectoryA(parent, NULL);
+            _snprintf(path, MAX_PATH, "%s\\SnesEmuAi_achievements.dat", parent);
+            path[MAX_PATH - 1] = '\0';
+        }
+        return path;
+    }
 
     // ─── Get pointer to SNES WRAM bank $7E (128 KB) ──────────────
     static const uint8_t* GetWRAMPtr() {
@@ -181,7 +194,7 @@ private:
 
     // ─── Persistence ─────────────────────────────────────────────
     void SaveToDisk() const {
-        std::ofstream f(SAVE_FILE, std::ios::binary);
+        std::ofstream f(GetSaveFilePath(), std::ios::binary);
         if (!f) return;
         for (const auto& a : m_list) {
             if (!a.unlocked) continue;
@@ -190,7 +203,7 @@ private:
     }
 
     void LoadFromDisk() {
-        std::ifstream f(SAVE_FILE, std::ios::binary);
+        std::ifstream f(GetSaveFilePath(), std::ios::binary);
         if (!f) return;
         uint32_t id;
         while (f.read(reinterpret_cast<char*>(&id), sizeof(id))) {

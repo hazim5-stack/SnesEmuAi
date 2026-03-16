@@ -1,5 +1,6 @@
 #pragma once
 #include <windows.h>
+#include <tchar.h>
 #include <dwmapi.h>
 #include "SnesEmuAiBridge.h"
 
@@ -46,9 +47,15 @@ public:
     }
 
     bool IsDevMode() {
-        // Read configuration to check for DevMode=1
+        static TCHAR confPath[MAX_PATH] = {0};
+        if (!confPath[0]) {
+            TCHAR appData[MAX_PATH]{};
+            GetEnvironmentVariable(TEXT("APPDATA"), appData, MAX_PATH);
+            _sntprintf(confPath, MAX_PATH, TEXT("%s\\SnesEmuAi\\SnesEmuAi.conf"), appData);
+            confPath[MAX_PATH - 1] = TEXT('\0');
+        }
         TCHAR szDevMode[10] = {0};
-        GetPrivateProfileString(TEXT("Config"), TEXT("DevMode"), TEXT("0"), szDevMode, 10, TEXT(".\\SnesEmuAi.conf"));
+        GetPrivateProfileString(TEXT("Config"), TEXT("DevMode"), TEXT("0"), szDevMode, 10, confPath);
         return (_tcscmp(szDevMode, TEXT("1")) == 0);
     }
 

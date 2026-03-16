@@ -1,5 +1,6 @@
 #pragma once
 #include <windows.h>
+#include <tchar.h>
 #include <string>
 #include <vector>
 #include <filesystem>
@@ -74,19 +75,20 @@ public:
     const std::vector<std::wstring>& GetRecentPaths() const { return m_recentPaths; }
 
     void LoadRecentHistory() {
-        // Implementation to read From snes9x.conf [RecentGames]
+        const TCHAR* confPath = GetConfPath();
         for (int i = 0; i < 10; i++) {
             TCHAR key[20]; _stprintf_s(key, TEXT("Recent%d"), i);
             TCHAR path[MAX_PATH];
-            GetPrivateProfileString(TEXT("RecentGames"), key, TEXT(""), path, MAX_PATH, TEXT(".\\SnesEmuAi.conf"));
+            GetPrivateProfileString(TEXT("RecentGames"), key, TEXT(""), path, MAX_PATH, confPath);
             if (_tcslen(path) > 0) m_recentPaths.push_back(path);
         }
     }
 
     void SaveRecentHistory() {
+        const TCHAR* confPath = GetConfPath();
         for (int i = 0; i < (int)m_recentPaths.size(); i++) {
             TCHAR key[20]; _stprintf_s(key, TEXT("Recent%d"), i);
-            WritePrivateProfileString(TEXT("RecentGames"), key, m_recentPaths[i].c_str(), TEXT(".\\SnesEmuAi.conf"));
+            WritePrivateProfileString(TEXT("RecentGames"), key, m_recentPaths[i].c_str(), confPath);
         }
     }
 
@@ -95,4 +97,19 @@ private:
     std::vector<GameEntry> m_games;
     std::vector<std::wstring> m_recentPaths;
     std::wstring m_appDataPath;
+
+    static const TCHAR* GetConfPath() {
+        static TCHAR confPath[MAX_PATH] = {0};
+        if (!confPath[0]) {
+            TCHAR appData[MAX_PATH]{};
+            GetEnvironmentVariable(TEXT("APPDATA"), appData, MAX_PATH);
+            TCHAR parent[MAX_PATH]{};
+            _sntprintf(parent, MAX_PATH, TEXT("%s\\SnesEmuAi"), appData);
+            parent[MAX_PATH - 1] = TEXT('\0');
+            CreateDirectory(parent, NULL);
+            _sntprintf(confPath, MAX_PATH, TEXT("%s\\SnesEmuAi.conf"), parent);
+            confPath[MAX_PATH - 1] = TEXT('\0');
+        }
+        return confPath;
+    }
 };

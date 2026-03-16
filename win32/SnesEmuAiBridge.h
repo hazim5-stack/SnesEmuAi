@@ -92,7 +92,22 @@ private:
     HWND m_hMainWnd;
 
     void LogBackendIssue(const char* message) {
-        FILE* fs = fopen("SnesEmuAi.log", "a");
+        static char logPath[MAX_PATH] = {0};
+        if (!logPath[0]) {
+            char local[MAX_PATH]{};
+            GetEnvironmentVariableA("LOCALAPPDATA", local, MAX_PATH);
+            char parent[MAX_PATH]{};
+            _snprintf(parent, MAX_PATH, "%s\\SnesEmuAi", local);
+            parent[MAX_PATH - 1] = '\0';
+            CreateDirectoryA(parent, NULL);
+            char logsDir[MAX_PATH]{};
+            _snprintf(logsDir, MAX_PATH, "%s\\Logs", parent);
+            logsDir[MAX_PATH - 1] = '\0';
+            CreateDirectoryA(logsDir, NULL);
+            _snprintf(logPath, MAX_PATH, "%s\\SnesEmuAiBridge.log", logsDir);
+            logPath[MAX_PATH - 1] = '\0';
+        }
+        FILE* fs = fopen(logPath, "a");
         if (!fs) {
             return;
         }
