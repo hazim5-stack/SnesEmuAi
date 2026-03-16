@@ -1,4 +1,8 @@
-  Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
+  SNES Emu Ai - AI-Powered Super Nintendo Emulator
+  Based on Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
+
+  SNES Emu Ai modifications and Cloud/AI integration
+  (c) Copyright 2025 - 2026  Hazim Batwa (hazim5@gmail.com)
 
   (c) Copyright 1996 - 2002  Gary Henderson (gary.henderson@ntlworld.com),
                              Jerremy Koot (jkoot@snes9x.com)
@@ -148,6 +152,9 @@
                              Nach,
                              nitsuja
   (c) Copyright 2009 - 2023  OV2
+
+  SNES Emu Ai - Cloud/AI integration, branding, modern shell design
+  (c) Copyright 2025 - 2026  Hazim Batwa (hazim5@gmail.com)
 
   Original Mac OS GUI code
   (c) Copyright 1998 - 2001  John Stiles
