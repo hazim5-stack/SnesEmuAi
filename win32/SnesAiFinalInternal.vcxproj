@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release Unicode|x64">
+      <Configuration>Release Unicode</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{A1-SNES-AI-FINAL-INTERNAL}</ProjectGuid>
+    <RootNamespace>SnesAiFinal</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Unicode|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release Unicode|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Unicode|x64'">
+    <OutDir>$(ProjectDir)_Output\</OutDir>
+    <IntDir>$(ProjectDir)_Intermediate\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Unicode|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;UNICODE;_UNICODE;__WIN32__;WIN32;__65C816__;ZLIB;PNG_SUPPORT;__I386__;ALLOW_CPU_OVERCLOCK;HAVE_LIBPNG;JMA_SUPPORT;UNZIP_SUPPORT;NETPLAY_SUPPORT;DIRECTDRAW_SUPPORT;USE_SLANG;VK_USE_PLATFORM_WIN32_KHR;VULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1;VULKAN_HPP_NO_EXCEPTIONS=1;VMA_DYNAMIC_VULKAN_FUNCTIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/FS /Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(ProjectDir);$(ProjectDir)..\apu;$(ProjectDir)zlib\src;$(ProjectDir)libpng\src;$(ProjectDir)..\apu\bapu;$(ProjectDir)..\external\glslang;$(ProjectDir)..\external\stb;$(ProjectDir)..\external\vulkan-headers\include;$(ProjectDir)..\external\VulkanMemoryAllocator-Hpp\include;$(ProjectDir)..\external\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>zlib.lib;libpng.lib;glslang.lib;SPIRV.lib;HLSL.lib;OSDependent.lib;winmm.lib;comctl32.lib;shlwapi.lib;d3d9.lib;dxguid.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="wsnes9x.cpp" />
+    <ClCompile Include="win32_display.cpp" />
+    <ClCompile Include="win32_sound.cpp" />
+    <ClCompile Include="wconfig.cpp" />
+    <ClCompile Include="win32.cpp" />
+    <ClCompile Include="AVIOutput.cpp" />
+    <ClCompile Include="CCGShader.cpp" />
+    <ClCompile Include="CD3DCG.cpp" />
+    <ClCompile Include="CDirect3D.cpp" />
+    <ClCompile Include="CDirectDraw.cpp" />
+    <ClCompile Include="cgFunctions.cpp" />
+    <ClCompile Include="CGLCG.cpp" />
+    <ClCompile Include="COpenGL.cpp" />
+    <ClCompile Include="CSaveLoadWithPreviewDlg.cpp" />
+    <ClCompile Include="CShaderParamDlg.cpp" />
+    <ClCompile Include="CVulkan.cpp" />
+    <ClCompile Include="CWaveOut.cpp" />
+    <ClCompile Include="CXAudio2.cpp" />
+    <ClCompile Include="DumpAtEnd.cpp" />
+    <ClCompile Include="dxerr.cpp" />
+    <ClCompile Include="gl_core_3_1.c" />
+    <ClCompile Include="image_functions.cpp" />
+    <ClCompile Include="InputCustom.cpp" />
+    <ClCompile Include="render.cpp" />
+    <ClCompile Include="_tfwopen.cpp" />
+    <!-- Core Files -->
+    <ClCompile Include="..\65c816.cpp" />
+    <ClCompile Include="..\apu\apu.cpp" />
+    <ClCompile Include="..\bsx.cpp" />
+    <ClCompile Include="..\c4.cpp" />
+    <ClCompile Include="..\c4emu.cpp" />
+    <ClCompile Include="..\cheats.cpp" />
+    <ClCompile Include="..\cheats2.cpp" />
+    <ClCompile Include="..\clip.cpp" />
+    <ClCompile Include="..\conffile.cpp" />
+    <ClCompile Include="..\controls.cpp" />
+    <ClCompile Include="..\cpu.cpp" />
+    <ClCompile Include="..\cpuexec.cpp" />
+    <ClCompile Include="..\cpuops.cpp" />
+    <ClCompile Include="..\crosshairs.cpp" />
+    <ClCompile Include="..\debug.cpp" />
+    <ClCompile Include="..\dma.cpp" />
+    <ClCompile Include="..\dsp.cpp" />
+    <ClCompile Include="..\dsp1.cpp" />
+    <ClCompile Include="..\dsp2.cpp" />
+    <ClCompile Include="..\dsp3.cpp" />
+    <ClCompile Include="..\dsp4.cpp" />
+    <ClCompile Include="..\fscompat.cpp" />
+    <ClCompile Include="..\fxemu.cpp" />
+    <ClCompile Include="..\fxinst.cpp" />
+    <ClCompile Include="..\gfx.cpp" />
+    <ClCompile Include="..\globals.cpp" />
+    <ClCompile Include="..\loadzip.cpp" />
+    <ClCompile Include="..\memmap.cpp" />
+    <ClCompile Include="..\movie.cpp" />
+    <ClCompile Include="..\msu1.cpp" />
+    <ClCompile Include="..\netplay.cpp" />
+    <ClCompile Include="..\obc1.cpp" />
+    <ClCompile Include="..\ppu.cpp" />
+    <ClCompile Include="..\sa1.cpp" />
+    <ClCompile Include="..\sa1cpu.cpp" />
+    <ClCompile Include="..\screenshot.cpp" />
+    <ClCompile Include="..\sdd1.cpp" />
+    <ClCompile Include="..\sdd1emu.cpp" />
+    <ClCompile Include="..\server.cpp" />
+    <ClCompile Include="..\seta.cpp" />
+    <ClCompile Include="..\seta010.cpp" />
+    <ClCompile Include="..\seta011.cpp" />
+    <ClCompile Include="..\seta018.cpp" />
+    <ClCompile Include="..\sha256.cpp" />
+    <ClCompile Include="..\snapshot.cpp" />
+    <ClCompile Include="..\snes9x.cpp" />
+    <ClCompile Include="..\spc7110.cpp" />
+    <ClCompile Include="..\spc7110dec.cpp" />
+    <ClCompile Include="..\spc7110emu.cpp" />
+    <ClCompile Include="..\srtc.cpp" />
+    <ClCompile Include="..\srtcemu.cpp" />
+    <ClCompile Include="..\statemanager.cpp" />
+    <ClCompile Include="..\stream.cpp" />
+    <ClCompile Include="..\tile.cpp" />
+    <ClCompile Include="..\jma\jma.cpp" />
+    <ClCompile Include="..\jma\7zlzma.cpp" />
+    <ClCompile Include="..\jma\crc32.cpp" />
+    <ClCompile Include="..\jma\iiostrm.cpp" />
+    <ClCompile Include="..\jma\inbyte.cpp" />
+    <ClCompile Include="..\jma\lzma.cpp" />
+    <ClCompile Include="..\jma\lzmadec.cpp" />
+    <ClCompile Include="..\jma\s9x-jma.cpp" />
+    <ClCompile Include="..\unzip\unzip.cpp" />
+    <ClCompile Include="..\unzip\ioapi.cpp" />
+    <ClCompile Include="..\unzip\do_unzip.cpp" />
+    <!-- Filters -->
+    <ClCompile Include="..\filter\2xsai.cpp" />
+    <ClCompile Include="..\filter\blit.cpp" />
+    <ClCompile Include="..\filter\epx.cpp" />
+    <ClCompile Include="..\filter\hq2x.cpp" />
+    <ClCompile Include="..\filter\xbrz.cpp" />
+    <ClCompile Include="..\filter\sharpbilinear_flexible.cpp" />
+    <ClCompile Include="..\filter\snes_ntsc.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,15 @@
+<Project>
+  <Target
+    Name="EnforceAiIntegratedWindowsBuildOnly"
+    BeforeTargets="PrepareForBuild"
+    Condition="
+      '$(MSBuildProjectFile)' != 'snes9xw.vcxproj' and
+      '$(MSBuildProjectFile)' != 'zlib.vcxproj' and
+      '$(MSBuildProjectFile)' != 'libpng.vcxproj' and
+      '$(MSBuildProjectFile)' != 'SPIRV.vcxproj' and
+      '$(MSBuildProjectFile)' != 'HLSL.vcxproj' and
+      '$(MSBuildProjectFile)' != 'glslang.vcxproj' and
+      '$(MSBuildProjectFile)' != 'OSDependent.vcxproj'">
+    <Error Text="This workspace is locked to the AI-integrated Windows build only. Use win32\\build_main_release_x64.cmd or build win32\\snes9xw.vcxproj with Platform=x64, Configuration='Release Unicode', PlatformToolset=v143, and BuildProjectReferences=false." />
+  </Target>
+</Project>

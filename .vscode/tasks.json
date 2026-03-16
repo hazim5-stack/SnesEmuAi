@@ -1,0 +1,259 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build Snes9x 2026",
+			"type": "shell",
+			"command": "\"C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe\" \"win32\\snes9xw.vcxproj\" /t:Build /p:Configuration=\"Release Unicode\" /p:Platform=\"x64\" /p:PlatformToolset=v145 /m:1 /p:BuildInParallel=false /p:CL_MPCount=1",
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Build Snes9x 2026 Fixed",
+			"type": "shell",
+			"command": "& \"C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe\" \"win32\\snes9xw.vcxproj\" /t:Build /p:Configuration=\"Release Unicode\" /p:Platform=\"x64\" /p:PlatformToolset=v145 /m:1 /p:BuildInParallel=false /p:CL_MPCount=1",
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Build Snes9x via PATH",
+			"type": "shell",
+			"command": "msbuild win32\\snes9xw.vcxproj /t:Build /p:Configuration=\"Release Unicode\" /p:Platform=\"x64\" /p:PlatformToolset=v145 /m:1 /p:BuildInParallel=false /p:CL_MPCount=1",
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Build Snes9x via cmd",
+			"type": "shell",
+			"command": "cmd /c \"\\\"C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe\\\" win32\\snes9xw.vcxproj /t:Build /p:Configuration=\\\"Release Unicode\\\" /p:Platform=x64 /p:PlatformToolset=v145 /m:1 /p:BuildInParallel=false /p:CL_MPCount=1\"",
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Build Snes9x via env path",
+			"type": "shell",
+			"command": "& (Join-Path $env:ProgramFiles 'Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe') 'win32\\snes9xw.vcxproj' /t:Build /p:Configuration='Release Unicode' /p:Platform='x64' /p:PlatformToolset=v145 /m:1 /p:BuildInParallel=false /p:CL_MPCount=1",
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Check build artifact timestamp",
+			"type": "shell",
+			"command": "Get-Item 'win32\\snes9x-x64.exe' | Select-Object FullName, Length, LastWriteTime",
+			"isBackground": false
+		},
+		{
+			"label": "Build Snes9x minimal output",
+			"type": "shell",
+			"command": "& (Join-Path $env:ProgramFiles 'Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe') 'win32\\snes9xw.vcxproj' /t:Build /p:Configuration='Release Unicode' /p:Platform='x64' /p:PlatformToolset=v145 /m:1 /p:BuildInParallel=false /p:CL_MPCount=1 /v:minimal /nologo",
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Build Snes9x after FS fix",
+			"type": "shell",
+			"command": "& (Join-Path $env:ProgramFiles 'Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe') 'win32\\snes9xw.vcxproj' /t:Build /p:Configuration='Release Unicode' /p:Platform='x64' /p:PlatformToolset=v145 /m:1 /p:BuildInParallel=false /p:CL_MPCount=1 /v:minimal /nologo",
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Kill PDB lockers and clean x64 obj",
+			"type": "shell",
+			"command": "Get-Process mspdbsrv,cl,link,msbuild -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue; Remove-Item 'win32\\_Intermediate\\snes9x\\Release Unicode\\x64\\*' -Recurse -Force -ErrorAction SilentlyContinue; Write-Output 'CLEAN_DONE'",
+			"isBackground": false
+		},
+		{
+			"label": "Build Snes9x after clean",
+			"type": "shell",
+			"command": "& (Join-Path $env:ProgramFiles 'Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe') 'win32\\snes9xw.vcxproj' /t:Build /p:Configuration='Release Unicode' /p:Platform='x64' /p:PlatformToolset=v145 /m:1 /p:BuildInParallel=false /p:CL_MPCount=1 /v:minimal /nologo",
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Check exe timestamp after clean build",
+			"type": "shell",
+			"command": "Get-Item 'win32\\snes9x-x64.exe' | Select-Object Length, LastWriteTime",
+			"isBackground": false
+		},
+		{
+			"label": "Clean then build no-PDB release",
+			"type": "shell",
+			"command": "Get-Process mspdbsrv,cl,link,msbuild -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue; Remove-Item 'win32\\_Intermediate\\snes9x\\Release Unicode\\x64\\*' -Recurse -Force -ErrorAction SilentlyContinue; & (Join-Path $env:ProgramFiles 'Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe') 'win32\\snes9xw.vcxproj' /t:Build /p:Configuration='Release Unicode' /p:Platform='x64' /p:PlatformToolset=v145 /m:1 /p:BuildInParallel=false /p:CL_MPCount=1 /v:minimal /nologo",
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Fresh Build To File",
+			"type": "shell",
+			"command": "$msbuild = Join-Path $env:ProgramFiles 'Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe'; Remove-Item 'win32\\fresh_build.log' -Force -ErrorAction SilentlyContinue; & $msbuild 'win32\\snes9xw.vcxproj' /t:Build /p:Configuration='Release Unicode' /p:Platform='x64' /p:PlatformToolset=v145 /m:1 /p:BuildInParallel=false /p:CL_MPCount=1 /v:minimal /nologo *> 'win32\\fresh_build.log'; Write-Output \"EXIT:$LASTEXITCODE\"",
+			"isBackground": false
+		},
+		{
+			"label": "Fresh Build After Header Fix",
+			"type": "shell",
+			"command": "$msbuild = Join-Path $env:ProgramFiles 'Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe'; Get-Process mspdbsrv,cl,link,msbuild -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue; Remove-Item 'win32\\fresh_build_after_header_fix.log' -Force -ErrorAction SilentlyContinue; & $msbuild 'win32\\snes9xw.vcxproj' /t:Build /p:Configuration='Release Unicode' /p:Platform='x64' /p:PlatformToolset=v145 /m:1 /p:BuildInParallel=false /p:CL_MPCount=1 /v:minimal /nologo *> 'win32\\fresh_build_after_header_fix.log'; Write-Output \"EXIT:$LASTEXITCODE\"",
+			"isBackground": false
+		},
+		{
+			"label": "Fresh Build After Extern Cleanup",
+			"type": "shell",
+			"command": "$msbuild = Join-Path $env:ProgramFiles 'Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe'; Get-Process mspdbsrv,cl,link,msbuild -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue; Remove-Item 'win32\\fresh_build_after_extern_cleanup.log' -Force -ErrorAction SilentlyContinue; & $msbuild 'win32\\snes9xw.vcxproj' /t:Build /p:Configuration='Release Unicode' /p:Platform='x64' /p:PlatformToolset=v145 /m:1 /p:BuildInParallel=false /p:CL_MPCount=1 /v:minimal /nologo *> 'win32\\fresh_build_after_extern_cleanup.log'; Write-Output \"EXIT:$LASTEXITCODE\"",
+			"isBackground": false
+		},
+		{
+			"label": "Rebuild deps with v145",
+			"type": "shell",
+			"command": "$msbuild = Join-Path $env:ProgramFiles 'Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe'; Remove-Item 'win32\\dep_rebuild.log' -Force -ErrorAction SilentlyContinue; & $msbuild 'win32\\zlib\\zlib.vcxproj' /t:Rebuild /p:Configuration='Release Unicode' /p:Platform='x64' /p:PlatformToolset=v145 /m:1 /v:minimal /nologo *> 'win32\\dep_rebuild.log'; & $msbuild 'win32\\libpng\\libpng.vcxproj' /t:Rebuild /p:Configuration='Release Unicode' /p:Platform='x64' /p:PlatformToolset=v145 /m:1 /v:minimal /nologo *>> 'win32\\dep_rebuild.log'; & $msbuild 'win32\\glslang\\glslang\\glslang.vcxproj' /t:Rebuild /p:Configuration='Release' /p:Platform='x64' /p:PlatformToolset=v145 /m:1 /v:minimal /nologo *>> 'win32\\dep_rebuild.log'; & $msbuild 'win32\\glslang\\SPIRV\\SPIRV.vcxproj' /t:Rebuild /p:Configuration='Release' /p:Platform='x64' /p:PlatformToolset=v145 /m:1 /v:minimal /nologo *>> 'win32\\dep_rebuild.log'; & $msbuild 'win32\\glslang\\hlsl\\HLSL.vcxproj' /t:Rebuild /p:Configuration='Release' /p:Platform='x64' /p:PlatformToolset=v145 /m:1 /v:minimal /nologo *>> 'win32\\dep_rebuild.log'; & $msbuild 'win32\\glslang\\glslang\\OSDependent\\Windows\\OSDependent.vcxproj' /t:Rebuild /p:Configuration='Release' /p:Platform='x64' /p:PlatformToolset=v145 /m:1 /v:minimal /nologo *>> 'win32\\dep_rebuild.log'; Write-Output \"EXIT:$LASTEXITCODE\"",
+			"isBackground": false
+		},
+		{
+			"label": "rebuild-snes9xw-release-x64",
+			"type": "shell",
+			"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\"",
+			"args": [
+				"win32\\snes9xw.vcxproj",
+				"/t:Rebuild",
+				"/p:Configuration=Release Unicode",
+				"/p:Platform=x64",
+				"/p:PlatformToolset=v145",
+				"/m:1",
+				"/v:minimal",
+				"/nologo"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "rebuild-snes9xw-release-x64",
+			"type": "shell",
+			"command": "&",
+			"args": [
+				"\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\"",
+				"win32\\snes9xw.vcxproj",
+				"/t:Rebuild",
+				"/p:Configuration=Release Unicode",
+				"/p:Platform=x64",
+				"/p:PlatformToolset=v145",
+				"/m:1",
+				"/v:minimal",
+				"/nologo"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "rebuild-snes9xw-release-x64-cmd",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"\"\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\" win32\\snes9xw.vcxproj /t:Rebuild /p:Configuration=\"Release Unicode\" /p:Platform=x64 /p:PlatformToolset=v145 /m:1 /v:minimal /nologo\""
+			],
+			"isBackground": false
+		},
+		{
+			"label": "rebuild-snes9xw-msbuild-path",
+			"type": "shell",
+			"command": "msbuild",
+			"args": [
+				"win32\\snes9xw.vcxproj",
+				"/t:Rebuild",
+				"/p:Configuration=Release Unicode",
+				"/p:Platform=x64",
+				"/p:PlatformToolset=v145",
+				"/m:1",
+				"/v:minimal",
+				"/nologo"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "rebuild-snes9xw-shortpath",
+			"type": "shell",
+			"command": "C:\\Progra~1\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
+			"args": [
+				"win32\\snes9xw.vcxproj",
+				"/t:Rebuild",
+				"/p:Configuration=Release Unicode",
+				"/p:Platform=x64",
+				"/p:PlatformToolset=v145",
+				"/m:1",
+				"/v:minimal",
+				"/nologo"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "rebuild-snes9xw-startprocess",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-Command",
+				"$p='C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe'; $a='win32\\snes9xw.vcxproj /t:Rebuild /p:Configuration=\"Release Unicode\" /p:Platform=x64 /p:PlatformToolset=v145 /m:1 /v:minimal /nologo'; $proc=Start-Process -FilePath $p -ArgumentList $a -Wait -PassThru -NoNewWindow; exit $proc.ExitCode"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "run-build-script",
+			"type": "shell",
+			"command": "win32\\build_main_release_x64.cmd",
+			"isBackground": false
+		},
+		{
+			"label": "find-msbuild",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"where msbuild"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Build new UI",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"--prefix",
+				"new UI",
+				"run",
+				"build"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Install new UI deps",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"--prefix",
+				"new UI",
+				"install"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Install new UI dependencies",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"--prefix",
+				"new UI",
+				"install",
+				"--include=dev"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Build new UI now",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"--prefix",
+				"new UI",
+				"run",
+				"build"
+			],
+			"isBackground": false
+		}
+	]
+}

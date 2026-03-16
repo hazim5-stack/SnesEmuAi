@@ -1,0 +1,3 @@
+Reading config file C:\Users\hazim\Downloads\snes9x-master\snes9x-master\win32\export\snes9x.conf.
+Saving	config file	C:\Users\hazim\Downloads\snes9x-master\snes9x-master\win32\export\snes9x.conf
+Saving	config file	C:\Users\hazim\Downloads\snes9x-master\snes9x-master\win32\export\snes9x.conf
